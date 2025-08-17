@@ -1,0 +1,366 @@
+syntax = "proto3";
+
+package feature_flags.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/feature-flag-platform/proto/feature_flags/v1;featureflagsv1";
+
+// AnalyticsService provides experiment analysis and statistical computations
+service AnalyticsService {
+  // Get experiment results and statistical analysis
+  rpc GetExperimentResults(GetExperimentResultsRequest) returns (ExperimentResults) {
+    option (google.api.http) = {
+      get: "/v1/orgs/{org_id}/projects/{project_id}/environments/{env_id}/experiments/{experiment_key}/results"
+    };
+  }
+  
+  // Get flag usage analytics
+  rpc GetFlagAnalytics(GetFlagAnalyticsRequest) returns (FlagAnalytics) {
+    option (google.api.http) = {
+      get: "/v1/orgs/{org_id}/projects/{project_id}/environments/{env_id}/flags/{flag_key}/analytics"
+    };
+  }
+  
+  // Get environment overview analytics
+  rpc GetEnvironmentAnalytics(GetEnvironmentAnalyticsRequest) returns (EnvironmentAnalytics) {
+    option (google.api.http) = {
+      get: "/v1/orgs/{org_id}/projects/{project_id}/environments/{env_id}/analytics"
+    };
+  }
+  
+  // Get real-time metrics dashboard data
+  rpc GetDashboardMetrics(GetDashboardMetricsRequest) returns (DashboardMetrics) {
+    option (google.api.http) = {
+      get: "/v1/orgs/{org_id}/dashboard"
+    };
+  }
+  
+  // Run custom analytics query
+  rpc RunCustomQuery(RunCustomQueryRequest) returns (CustomQueryResponse) {
+    option (google.api.http) = {
+      post: "/v1/orgs/{org_id}/analytics/query"
+      body: "*"
+    };
+  }
+  
+  // Health check
+  rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse) {
+    option (google.api.http) = {
+      get: "/v1/health"
+    };
+  }
+}
+
+// Request messages
+message GetExperimentResultsRequest {
+  string org_id = 1;
+  string project_id = 2;
+  string env_id = 3;
+  string experiment_key = 4;
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+  repeated string metric_keys = 7;
+  TimeWindow time_window = 8;
+  bool include_segments = 9;
+}
+
+message GetFlagAnalyticsRequest {
+  string org_id = 1;
+  string project_id = 2;
+  string env_id = 3;
+  string flag_key = 4;
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+  TimeWindow time_window = 7;
+}
+
+message GetEnvironmentAnalyticsRequest {
+  string org_id = 1;
+  string project_id = 2;
+  string env_id = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+}
+
+message GetDashboardMetricsRequest {
+  string org_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+message RunCustomQueryRequest {
+  string org_id = 1;
+  string query = 2;
+  google.protobuf.Struct parameters = 3;
+  int32 limit = 4;
+}
+
+message HealthCheckRequest {}
+
+enum TimeWindow {
+  TIME_WINDOW_UNSPECIFIED = 0;
+  TIME_WINDOW_HOUR = 1;
+  TIME_WINDOW_DAY = 2;
+  TIME_WINDOW_WEEK = 3;
+  TIME_WINDOW_MONTH = 4;
+}
+
+// Response messages
+message ExperimentResults {
+  string experiment_key = 1;
+  ExperimentStatus status = 2;
+  google.protobuf.Timestamp start_date = 3;
+  google.protobuf.Timestamp end_date = 4;
+  int64 total_participants = 5;
+  repeated VariationResults variations = 6;
+  repeated MetricResults metrics = 7;
+  StatisticalSignificance significance = 8;
+  repeated GuardrailResult guardrails = 9;
+  google.protobuf.Timestamp last_updated = 10;
+}
+
+enum ExperimentStatus {
+  EXPERIMENT_STATUS_UNSPECIFIED = 0;
+  EXPERIMENT_STATUS_DRAFT = 1;
+  EXPERIMENT_STATUS_RUNNING = 2;
+  EXPERIMENT_STATUS_STOPPED = 3;
+  EXPERIMENT_STATUS_COMPLETED = 4;
+}
+
+message VariationResults {
+  string variation_key = 1;
+  string variation_name = 2;
+  int64 participants = 3;
+  double conversion_rate = 4;
+  double traffic_allocation = 5;
+}
+
+message MetricResults {
+  string metric_key = 1;
+  string metric_name = 2;
+  MetricType metric_type = 3;
+  string control_variation = 4;
+  repeated VariationMetric variation_metrics = 5;
+  StatisticalTest test_results = 6;
+}
+
+enum MetricType {
+  METRIC_TYPE_UNSPECIFIED = 0;
+  METRIC_TYPE_BINARY = 1;
+  METRIC_TYPE_CONTINUOUS = 2;
+  METRIC_TYPE_RATIO = 3;
+}
+
+message VariationMetric {
+  string variation_key = 1;
+  double mean = 2;
+  double std_dev = 3;
+  int64 sample_size = 4;
+  double confidence_interval_lower = 5;
+  double confidence_interval_upper = 6;
+  double lift_vs_control = 7;
+  double lift_confidence_interval_lower = 8;
+  double lift_confidence_interval_upper = 9;
+}
+
+message StatisticalTest {
+  TestType test_type = 1;
+  double p_value = 2;
+  double test_statistic = 3;
+  double confidence_level = 4;
+  bool is_significant = 5;
+  double power = 6;
+  double minimum_detectable_effect = 7;
+}
+
+enum TestType {
+  TEST_TYPE_UNSPECIFIED = 0;
+  TEST_TYPE_T_TEST = 1;
+  TEST_TYPE_CHI_SQUARE = 2;
+  TEST_TYPE_MANN_WHITNEY = 3;
+  TEST_TYPE_FISHERS_EXACT = 4;
+}
+
+message StatisticalSignificance {
+  bool overall_significant = 1;
+  double overall_confidence = 2;
+  string recommendation = 3;
+  repeated string warnings = 4;
+}
+
+message GuardrailResult {
+  string guardrail_name = 1;
+  string metric_key = 2;
+  GuardrailStatus status = 3;
+  double threshold = 4;
+  double current_value = 5;
+  string message = 6;
+}
+
+enum GuardrailStatus {
+  GUARDRAIL_STATUS_UNSPECIFIED = 0;
+  GUARDRAIL_STATUS_PASSING = 1;
+  GUARDRAIL_STATUS_WARNING = 2;
+  GUARDRAIL_STATUS_FAILING = 3;
+}
+
+message FlagAnalytics {
+  string flag_key = 1;
+  int64 total_evaluations = 2;
+  int64 unique_users = 3;
+  repeated VariationUsage variation_usage = 4;
+  repeated TimeSeriesPoint evaluation_timeline = 5;
+  double avg_evaluation_time_ms = 6;
+  int64 error_count = 7;
+}
+
+message VariationUsage {
+  string variation_key = 1;
+  int64 evaluations = 2;
+  int64 unique_users = 3;
+  double percentage = 4;
+}
+
+message TimeSeriesPoint {
+  google.protobuf.Timestamp timestamp = 1;
+  double value = 2;
+  map<string, double> breakdown = 3;
+}
+
+message EnvironmentAnalytics {
+  string env_key = 1;
+  int64 total_flags = 2;
+  int64 active_flags = 3;
+  int64 total_experiments = 4;
+  int64 running_experiments = 5;
+  int64 total_evaluations_last_24h = 6;
+  int64 unique_users_last_24h = 7;
+  repeated TimeSeriesPoint evaluation_timeline = 8;
+  repeated FlagUsageSummary top_flags = 9;
+}
+
+message FlagUsageSummary {
+  string flag_key = 1;
+  string flag_name = 2;
+  int64 evaluations = 3;
+  int64 unique_users = 4;
+  double avg_response_time_ms = 5;
+}
+
+message DashboardMetrics {
+  OrganizationMetrics org_metrics = 1;
+  repeated ProjectMetrics project_metrics = 2;
+  repeated AlertInfo active_alerts = 3;
+  SystemHealth system_health = 4;
+}
+
+message OrganizationMetrics {
+  string org_id = 1;
+  int64 total_projects = 2;
+  int64 total_environments = 3;
+  int64 total_flags = 4;
+  int64 total_experiments = 5;
+  int64 evaluations_last_24h = 6;
+  double avg_response_time_ms = 7;
+}
+
+message ProjectMetrics {
+  string project_id = 1;
+  string project_name = 2;
+  int64 active_flags = 3;
+  int64 running_experiments = 4;
+  int64 evaluations_last_24h = 5;
+  double error_rate = 6;
+}
+
+message AlertInfo {
+  string alert_id = 1;
+  AlertType alert_type = 2;
+  AlertSeverity severity = 3;
+  string message = 4;
+  google.protobuf.Timestamp created_at = 5;
+  string resource_id = 6;
+  string resource_type = 7;
+}
+
+enum AlertType {
+  ALERT_TYPE_UNSPECIFIED = 0;
+  ALERT_TYPE_GUARDRAIL_BREACH = 1;
+  ALERT_TYPE_HIGH_ERROR_RATE = 2;
+  ALERT_TYPE_SLOW_RESPONSE_TIME = 3;
+  ALERT_TYPE_LOW_TRAFFIC = 4;
+  ALERT_TYPE_EXPERIMENT_STOPPED = 5;
+}
+
+enum AlertSeverity {
+  ALERT_SEVERITY_UNSPECIFIED = 0;
+  ALERT_SEVERITY_INFO = 1;
+  ALERT_SEVERITY_WARNING = 2;
+  ALERT_SEVERITY_CRITICAL = 3;
+}
+
+message SystemHealth {
+  HealthStatus overall_status = 1;
+  repeated ServiceHealth services = 2;
+  repeated MetricHealth metrics = 3;
+}
+
+message ServiceHealth {
+  string service_name = 1;
+  HealthStatus status = 2;
+  double uptime_percentage = 3;
+  double avg_response_time_ms = 4;
+  int64 requests_per_minute = 5;
+  double error_rate = 6;
+}
+
+message MetricHealth {
+  string metric_name = 1;
+  double current_value = 2;
+  double threshold = 3;
+  HealthStatus status = 4;
+  string unit = 5;
+}
+
+message CustomQueryResponse {
+  repeated QueryResult results = 1;
+  int64 total_rows = 2;
+  double execution_time_ms = 3;
+  repeated string column_names = 4;
+}
+
+message QueryResult {
+  map<string, google.protobuf.Value> row = 1;
+}
+
+message HealthCheckResponse {
+  HealthStatus status = 1;
+  google.protobuf.Timestamp timestamp = 2;
+  string version = 3;
+  map<string, ServiceStatus> dependencies = 4;
+  AnalyticsStats stats = 5;
+}
+
+enum HealthStatus {
+  HEALTH_STATUS_UNSPECIFIED = 0;
+  HEALTH_STATUS_HEALTHY = 1;
+  HEALTH_STATUS_UNHEALTHY = 2;
+  HEALTH_STATUS_DEGRADED = 3;
+}
+
+message ServiceStatus {
+  HealthStatus status = 1;
+  string message = 2;
+  google.protobuf.Timestamp last_check = 3;
+}
+
+message AnalyticsStats {
+  int64 total_events_processed = 1;
+  int64 queries_per_minute = 2;
+  double avg_query_time_ms = 3;
+  int64 active_experiments = 4;
+  double data_freshness_seconds = 5;
+}

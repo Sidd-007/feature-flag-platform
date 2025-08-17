@@ -1,0 +1,145 @@
+syntax = "proto3";
+
+package feature_flags.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/feature-flag-platform/proto/feature_flags/v1;featureflagsv1";
+
+// EvaluatorService provides high-performance flag evaluation
+service EvaluatorService {
+  // Evaluate single flag for a user context
+  rpc EvaluateFlag(EvaluateFlagRequest) returns (EvaluationResult) {
+    option (google.api.http) = {
+      post: "/v1/evaluate/{env_key}/{flag_key}"
+      body: "*"
+    };
+  }
+  
+  // Evaluate multiple flags for a user context
+  rpc EvaluateFlags(EvaluateFlagsRequest) returns (EvaluationResponse) {
+    option (google.api.http) = {
+      post: "/v1/evaluate/{env_key}"
+      body: "*"
+    };
+  }
+  
+  // Evaluate all flags for a user context
+  rpc EvaluateAllFlags(EvaluateAllFlagsRequest) returns (EvaluationResponse) {
+    option (google.api.http) = {
+      post: "/v1/evaluate-all/{env_key}"
+      body: "*"
+    };
+  }
+  
+  // Stream real-time config updates for an environment
+  rpc StreamConfigUpdates(StreamConfigRequest) returns (stream ConfigUpdate);
+  
+  // Health check
+  rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse) {
+    option (google.api.http) = {
+      get: "/v1/health"
+    };
+  }
+}
+
+// Request messages
+message EvaluateFlagRequest {
+  string env_key = 1;
+  string flag_key = 2;
+  UserContext context = 3;
+  bool include_reason = 4;
+}
+
+message EvaluateFlagsRequest {
+  string env_key = 1;
+  repeated string flag_keys = 2;
+  UserContext context = 3;
+  bool include_reason = 4;
+}
+
+message EvaluateAllFlagsRequest {
+  string env_key = 1;
+  UserContext context = 2;
+  bool include_reason = 3;
+  bool include_archived = 4;
+}
+
+message UserContext {
+  string user_key = 1;
+  google.protobuf.Struct attributes = 2;
+  string session_id = 3;
+  string ip_address = 4;
+  string user_agent = 5;
+}
+
+message StreamConfigRequest {
+  string env_key = 1;
+  int32 current_version = 2;
+}
+
+message HealthCheckRequest {}
+
+// Response messages
+message EvaluationResult {
+  string flag_key = 1;
+  string variation_key = 2;
+  google.protobuf.Value value = 3;
+  string reason = 4;
+  string bucketing_id = 5;
+  int32 bucket = 6;
+  string rule_id = 7;
+  bool in_experiment = 8;
+  string experiment_key = 9;
+  int32 config_version = 10;
+  google.protobuf.Timestamp evaluated_at = 11;
+}
+
+message EvaluationResponse {
+  map<string, EvaluationResult> flags = 1;
+  int32 config_version = 2;
+  google.protobuf.Timestamp evaluated_at = 3;
+  string request_id = 4;
+}
+
+message ConfigUpdate {
+  string env_key = 1;
+  int32 new_version = 2;
+  ConfigUpdateType update_type = 3;
+  repeated string updated_flags = 4;
+  repeated string updated_segments = 5;
+  google.protobuf.Timestamp timestamp = 6;
+  google.protobuf.Struct config_diff = 7;
+}
+
+enum ConfigUpdateType {
+  CONFIG_UPDATE_TYPE_UNSPECIFIED = 0;
+  CONFIG_UPDATE_TYPE_FULL_REFRESH = 1;
+  CONFIG_UPDATE_TYPE_INCREMENTAL = 2;
+  CONFIG_UPDATE_TYPE_FLAG_UPDATED = 3;
+  CONFIG_UPDATE_TYPE_FLAG_DELETED = 4;
+  CONFIG_UPDATE_TYPE_SEGMENT_UPDATED = 5;
+  CONFIG_UPDATE_TYPE_SEGMENT_DELETED = 6;
+}
+
+message HealthCheckResponse {
+  HealthStatus status = 1;
+  google.protobuf.Timestamp timestamp = 2;
+  string version = 3;
+  map<string, ServiceStatus> dependencies = 4;
+}
+
+enum HealthStatus {
+  HEALTH_STATUS_UNSPECIFIED = 0;
+  HEALTH_STATUS_HEALTHY = 1;
+  HEALTH_STATUS_UNHEALTHY = 2;
+  HEALTH_STATUS_DEGRADED = 3;
+}
+
+message ServiceStatus {
+  HealthStatus status = 1;
+  string message = 2;
+  google.protobuf.Timestamp last_check = 3;
+}

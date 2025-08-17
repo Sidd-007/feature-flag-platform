@@ -1,0 +1,431 @@
+syntax = "proto3";
+
+package feature_flags.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "github.com/feature-flag-platform/proto/feature_flags/v1;featureflagsv1";
+
+// ControlPlaneService provides APIs for managing feature flags, experiments, and configurations
+service ControlPlaneService {
+  // Organizations
+  rpc CreateOrganization(CreateOrganizationRequest) returns (Organization) {
+    option (google.api.http) = {
+      post: "/v1/orgs"
+      body: "*"
+    };
+  }
+  
+  rpc GetOrganization(GetOrganizationRequest) returns (Organization) {
+    option (google.api.http) = {
+      get: "/v1/orgs/{org_id}"
+    };
+  }
+  
+  rpc ListOrganizations(ListOrganizationsRequest) returns (ListOrganizationsResponse) {
+    option (google.api.http) = {
+      get: "/v1/orgs"
+    };
+  }
+  
+  rpc UpdateOrganization(UpdateOrganizationRequest) returns (Organization) {
+    option (google.api.http) = {
+      put: "/v1/orgs/{org_id}"
+      body: "*"
+    };
+  }
+  
+  rpc DeleteOrganization(DeleteOrganizationRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/orgs/{org_id}"
+    };
+  }
+
+  // Projects
+  rpc CreateProject(CreateProjectRequest) returns (Project) {
+    option (google.api.http) = {
+      post: "/v1/orgs/{org_id}/projects"
+      body: "*"
+    };
+  }
+  
+  rpc GetProject(GetProjectRequest) returns (Project) {
+    option (google.api.http) = {
+      get: "/v1/orgs/{org_id}/projects/{project_id}"
+    };
+  }
+  
+  rpc ListProjects(ListProjectsRequest) returns (ListProjectsResponse) {
+    option (google.api.http) = {
+      get: "/v1/orgs/{org_id}/projects"
+    };
+  }
+  
+  rpc UpdateProject(UpdateProjectRequest) returns (Project) {
+    option (google.api.http) = {
+      put: "/v1/orgs/{org_id}/projects/{project_id}"
+      body: "*"
+    };
+  }
+  
+  rpc DeleteProject(DeleteProjectRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/orgs/{org_id}/projects/{project_id}"
+    };
+  }
+
+  // Environments
+  rpc CreateEnvironment(CreateEnvironmentRequest) returns (Environment) {
+    option (google.api.http) = {
+      post: "/v1/orgs/{org_id}/projects/{project_id}/environments"
+      body: "*"
+    };
+  }
+  
+  rpc GetEnvironment(GetEnvironmentRequest) returns (Environment) {
+    option (google.api.http) = {
+      get: "/v1/orgs/{org_id}/projects/{project_id}/environments/{env_id}"
+    };
+  }
+  
+  rpc ListEnvironments(ListEnvironmentsRequest) returns (ListEnvironmentsResponse) {
+    option (google.api.http) = {
+      get: "/v1/orgs/{org_id}/projects/{project_id}/environments"
+    };
+  }
+
+  // Feature Flags
+  rpc CreateFlag(CreateFlagRequest) returns (Flag) {
+    option (google.api.http) = {
+      post: "/v1/orgs/{org_id}/projects/{project_id}/environments/{env_id}/flags"
+      body: "*"
+    };
+  }
+  
+  rpc GetFlag(GetFlagRequest) returns (Flag) {
+    option (google.api.http) = {
+      get: "/v1/orgs/{org_id}/projects/{project_id}/environments/{env_id}/flags/{flag_key}"
+    };
+  }
+  
+  rpc ListFlags(ListFlagsRequest) returns (ListFlagsResponse) {
+    option (google.api.http) = {
+      get: "/v1/orgs/{org_id}/projects/{project_id}/environments/{env_id}/flags"
+    };
+  }
+  
+  rpc UpdateFlag(UpdateFlagRequest) returns (Flag) {
+    option (google.api.http) = {
+      put: "/v1/orgs/{org_id}/projects/{project_id}/environments/{env_id}/flags/{flag_key}"
+      body: "*"
+    };
+  }
+  
+  rpc DeleteFlag(DeleteFlagRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/orgs/{org_id}/projects/{project_id}/environments/{env_id}/flags/{flag_key}"
+    };
+  }
+  
+  rpc PublishFlag(PublishFlagRequest) returns (PublishFlagResponse) {
+    option (google.api.http) = {
+      post: "/v1/orgs/{org_id}/projects/{project_id}/environments/{env_id}/flags/{flag_key}/publish"
+      body: "*"
+    };
+  }
+
+  // Configuration
+  rpc GetEnvironmentConfig(GetEnvironmentConfigRequest) returns (EnvironmentConfig) {
+    option (google.api.http) = {
+      get: "/v1/configs/{env_key}"
+    };
+  }
+  
+  rpc StreamConfigUpdates(StreamConfigUpdatesRequest) returns (stream ConfigUpdate);
+}
+
+// Core data types
+message Organization {
+  string id = 1;
+  string name = 2;
+  string slug = 3;
+  BillingTier billing_tier = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  int32 version = 7;
+}
+
+enum BillingTier {
+  BILLING_TIER_UNSPECIFIED = 0;
+  BILLING_TIER_FREE = 1;
+  BILLING_TIER_PRO = 2;
+  BILLING_TIER_ENTERPRISE = 3;
+}
+
+message Project {
+  string id = 1;
+  string org_id = 2;
+  string name = 3;
+  string key = 4;
+  string description = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+  int32 version = 8;
+}
+
+message Environment {
+  string id = 1;
+  string project_id = 2;
+  string name = 3;
+  string key = 4;
+  bool is_prod = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+  int32 version = 8;
+}
+
+message Flag {
+  string id = 1;
+  string env_id = 2;
+  string key = 3;
+  string name = 4;
+  string description = 5;
+  FlagType type = 6;
+  repeated Variation variations = 7;
+  string default_variation = 8;
+  google.protobuf.Struct rules = 9;
+  FlagStatus status = 10;
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp updated_at = 12;
+  int32 version = 13;
+}
+
+enum FlagType {
+  FLAG_TYPE_UNSPECIFIED = 0;
+  FLAG_TYPE_BOOLEAN = 1;
+  FLAG_TYPE_MULTIVARIATE = 2;
+  FLAG_TYPE_JSON = 3;
+}
+
+enum FlagStatus {
+  FLAG_STATUS_UNSPECIFIED = 0;
+  FLAG_STATUS_ACTIVE = 1;
+  FLAG_STATUS_ARCHIVED = 2;
+}
+
+message Variation {
+  string key = 1;
+  string name = 2;
+  google.protobuf.Value value = 3;
+  string description = 4;
+}
+
+// Request and response messages
+message CreateOrganizationRequest {
+  string name = 1;
+  string slug = 2;
+}
+
+message GetOrganizationRequest {
+  string org_id = 1;
+}
+
+message ListOrganizationsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+}
+
+message ListOrganizationsResponse {
+  repeated Organization organizations = 1;
+  string next_page_token = 2;
+  int32 total_size = 3;
+}
+
+message UpdateOrganizationRequest {
+  string org_id = 1;
+  string name = 2;
+}
+
+message DeleteOrganizationRequest {
+  string org_id = 1;
+}
+
+message CreateProjectRequest {
+  string org_id = 1;
+  string name = 2;
+  string key = 3;
+  string description = 4;
+}
+
+message GetProjectRequest {
+  string org_id = 1;
+  string project_id = 2;
+}
+
+message ListProjectsRequest {
+  string org_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message ListProjectsResponse {
+  repeated Project projects = 1;
+  string next_page_token = 2;
+  int32 total_size = 3;
+}
+
+message UpdateProjectRequest {
+  string org_id = 1;
+  string project_id = 2;
+  string name = 3;
+  string description = 4;
+}
+
+message DeleteProjectRequest {
+  string org_id = 1;
+  string project_id = 2;
+}
+
+message CreateEnvironmentRequest {
+  string org_id = 1;
+  string project_id = 2;
+  string name = 3;
+  string key = 4;
+  bool is_prod = 5;
+}
+
+message GetEnvironmentRequest {
+  string org_id = 1;
+  string project_id = 2;
+  string env_id = 3;
+}
+
+message ListEnvironmentsRequest {
+  string org_id = 1;
+  string project_id = 2;
+}
+
+message ListEnvironmentsResponse {
+  repeated Environment environments = 1;
+}
+
+message CreateFlagRequest {
+  string org_id = 1;
+  string project_id = 2;
+  string env_id = 3;
+  string key = 4;
+  string name = 5;
+  string description = 6;
+  FlagType type = 7;
+  repeated Variation variations = 8;
+  string default_variation = 9;
+  google.protobuf.Struct rules = 10;
+}
+
+message GetFlagRequest {
+  string org_id = 1;
+  string project_id = 2;
+  string env_id = 3;
+  string flag_key = 4;
+}
+
+message ListFlagsRequest {
+  string org_id = 1;
+  string project_id = 2;
+  string env_id = 3;
+  int32 page_size = 4;
+  string page_token = 5;
+  FlagStatus status = 6;
+}
+
+message ListFlagsResponse {
+  repeated Flag flags = 1;
+  string next_page_token = 2;
+  int32 total_size = 3;
+}
+
+message UpdateFlagRequest {
+  string org_id = 1;
+  string project_id = 2;
+  string env_id = 3;
+  string flag_key = 4;
+  string name = 5;
+  string description = 6;
+  repeated Variation variations = 7;
+  string default_variation = 8;
+  google.protobuf.Struct rules = 9;
+  FlagStatus status = 10;
+}
+
+message DeleteFlagRequest {
+  string org_id = 1;
+  string project_id = 2;
+  string env_id = 3;
+  string flag_key = 4;
+}
+
+message PublishFlagRequest {
+  string org_id = 1;
+  string project_id = 2;
+  string env_id = 3;
+  string flag_key = 4;
+}
+
+message PublishFlagResponse {
+  google.protobuf.Timestamp published_at = 1;
+  int32 config_version = 2;
+  string message = 3;
+}
+
+message GetEnvironmentConfigRequest {
+  string env_key = 1;
+  string etag = 2;
+}
+
+message EnvironmentConfig {
+  string env_key = 1;
+  int32 version = 2;
+  repeated FlagConfig flags = 3;
+  repeated SegmentConfig segments = 4;
+  google.protobuf.Timestamp updated_at = 5;
+  string etag = 6;
+}
+
+message FlagConfig {
+  string key = 1;
+  FlagType type = 2;
+  repeated Variation variations = 3;
+  string default_variation = 4;
+  google.protobuf.Struct rules = 5;
+  FlagStatus status = 6;
+  double traffic_allocation = 7;
+}
+
+message SegmentConfig {
+  string key = 1;
+  string name = 2;
+  google.protobuf.Struct rules = 3;
+}
+
+message StreamConfigUpdatesRequest {
+  string env_key = 1;
+  int32 current_version = 2;
+}
+
+message ConfigUpdate {
+  string env_key = 1;
+  int32 new_version = 2;
+  ConfigUpdateType update_type = 3;
+  repeated string updated_flags = 4;
+  repeated string updated_segments = 5;
+  google.protobuf.Timestamp timestamp = 6;
+}
+
+enum ConfigUpdateType {
+  CONFIG_UPDATE_TYPE_UNSPECIFIED = 0;
+  CONFIG_UPDATE_TYPE_FULL_REFRESH = 1;
+  CONFIG_UPDATE_TYPE_INCREMENTAL = 2;
+}

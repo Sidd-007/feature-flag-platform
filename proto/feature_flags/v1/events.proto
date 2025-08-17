@@ -1,0 +1,173 @@
+syntax = "proto3";
+
+package feature_flags.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/feature-flag-platform/proto/feature_flags/v1;featureflagsv1";
+
+// EventsService handles ingestion of exposure and metric events
+service EventsService {
+  // Ingest exposure events (flag evaluations)
+  rpc IngestExposureEvents(IngestExposureEventsRequest) returns (IngestEventsResponse) {
+    option (google.api.http) = {
+      post: "/v1/events/exposure"
+      body: "*"
+    };
+  }
+  
+  // Ingest metric events (custom metrics)
+  rpc IngestMetricEvents(IngestMetricEventsRequest) returns (IngestEventsResponse) {
+    option (google.api.http) = {
+      post: "/v1/events/metrics"
+      body: "*"
+    };
+  }
+  
+  // Ingest events via streaming (higher throughput)
+  rpc StreamEvents(stream EventBatch) returns (stream IngestEventsResponse);
+  
+  // Health check
+  rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse) {
+    option (google.api.http) = {
+      get: "/v1/health"
+    };
+  }
+}
+
+// Event types
+message ExposureEvent {
+  string event_id = 1;
+  string env_key = 2;
+  string flag_key = 3;
+  string variation_key = 4;
+  string user_key_hash = 5;
+  string bucketing_id = 6;
+  string experiment_key = 7;
+  string session_id = 8;
+  google.protobuf.Struct context = 9;
+  google.protobuf.Struct meta = 10;
+  google.protobuf.Timestamp timestamp = 11;
+  string reason = 12;
+  int32 bucket = 13;
+  string rule_id = 14;
+}
+
+message MetricEvent {
+  string event_id = 1;
+  string env_key = 2;
+  string metric_key = 3;
+  string user_key_hash = 4;
+  double value = 5;
+  string unit = 6;
+  google.protobuf.Struct context = 7;
+  google.protobuf.Struct meta = 8;
+  google.protobuf.Timestamp timestamp = 9;
+  string session_id = 10;
+}
+
+message PerformanceEvent {
+  string event_id = 1;
+  string service_name = 2;
+  string operation_name = 3;
+  double duration_ms = 4;
+  int32 status_code = 5;
+  string env_key = 6;
+  string trace_id = 7;
+  string span_id = 8;
+  google.protobuf.Struct tags = 9;
+  google.protobuf.Timestamp timestamp = 10;
+}
+
+message ErrorEvent {
+  string event_id = 1;
+  string service_name = 2;
+  string error_type = 3;
+  string error_message = 4;
+  string stack_trace = 5;
+  string env_key = 6;
+  string user_key_hash = 7;
+  string trace_id = 8;
+  google.protobuf.Struct context = 9;
+  google.protobuf.Timestamp timestamp = 10;
+}
+
+// Request messages
+message IngestExposureEventsRequest {
+  repeated ExposureEvent events = 1;
+  string batch_id = 2;
+  google.protobuf.Timestamp batch_timestamp = 3;
+}
+
+message IngestMetricEventsRequest {
+  repeated MetricEvent events = 1;
+  string batch_id = 2;
+  google.protobuf.Timestamp batch_timestamp = 3;
+}
+
+message EventBatch {
+  string batch_id = 1;
+  EventBatchType batch_type = 2;
+  repeated ExposureEvent exposure_events = 3;
+  repeated MetricEvent metric_events = 4;
+  repeated PerformanceEvent performance_events = 5;
+  repeated ErrorEvent error_events = 6;
+  google.protobuf.Timestamp batch_timestamp = 7;
+}
+
+enum EventBatchType {
+  EVENT_BATCH_TYPE_UNSPECIFIED = 0;
+  EVENT_BATCH_TYPE_EXPOSURE = 1;
+  EVENT_BATCH_TYPE_METRIC = 2;
+  EVENT_BATCH_TYPE_PERFORMANCE = 3;
+  EVENT_BATCH_TYPE_ERROR = 4;
+  EVENT_BATCH_TYPE_MIXED = 5;
+}
+
+message HealthCheckRequest {}
+
+// Response messages
+message IngestEventsResponse {
+  int32 accepted_count = 1;
+  int32 rejected_count = 2;
+  repeated EventError errors = 3;
+  string batch_id = 4;
+  google.protobuf.Timestamp processed_at = 5;
+}
+
+message EventError {
+  string event_id = 1;
+  string error_code = 2;
+  string error_message = 3;
+}
+
+message HealthCheckResponse {
+  HealthStatus status = 1;
+  google.protobuf.Timestamp timestamp = 2;
+  string version = 3;
+  map<string, ServiceStatus> dependencies = 4;
+  IngestionStats stats = 5;
+}
+
+enum HealthStatus {
+  HEALTH_STATUS_UNSPECIFIED = 0;
+  HEALTH_STATUS_HEALTHY = 1;
+  HEALTH_STATUS_UNHEALTHY = 2;
+  HEALTH_STATUS_DEGRADED = 3;
+}
+
+message ServiceStatus {
+  HealthStatus status = 1;
+  string message = 2;
+  google.protobuf.Timestamp last_check = 3;
+}
+
+message IngestionStats {
+  int64 events_per_second = 1;
+  int64 total_events_processed = 2;
+  int64 events_in_queue = 3;
+  double avg_processing_time_ms = 4;
+  int64 errors_last_hour = 5;
+}
