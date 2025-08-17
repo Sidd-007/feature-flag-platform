@@ -7,8 +7,8 @@ import (
 
 	"github.com/rs/zerolog/log"
 
-	"github.com/feature-flag-platform/pkg/auth"
-	"github.com/feature-flag-platform/pkg/config"
+	"github.com/Sidd-007/feature-flag-platform/pkg/auth"
+	"github.com/Sidd-007/feature-flag-platform/pkg/config"
 )
 
 type contextKey string

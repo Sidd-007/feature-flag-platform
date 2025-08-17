@@ -7,7 +7,7 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/struct.proto";
 
-option go_package = "github.com/feature-flag-platform/proto/feature_flags/v1;featureflagsv1";
+option go_package = "github.com/Sidd-007/feature-flag-platform/proto/feature_flags/v1;featureflagsv1";
 
 // ControlPlaneService provides APIs for managing feature flags, experiments, and configurations
 service ControlPlaneService {

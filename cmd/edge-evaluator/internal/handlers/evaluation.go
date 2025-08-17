@@ -8,8 +8,8 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/rs/zerolog"
 
-	"github.com/feature-flag-platform/cmd/edge-evaluator/internal/services"
-	"github.com/feature-flag-platform/pkg/bucketing"
+	"github.com/Sidd-007/feature-flag-platform/cmd/edge-evaluator/internal/services"
+	"github.com/Sidd-007/feature-flag-platform/pkg/bucketing"
 )
 
 // EvaluationHandler handles flag evaluation endpoints

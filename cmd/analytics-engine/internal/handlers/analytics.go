@@ -5,8 +5,8 @@ import (
 
 	"github.com/rs/zerolog/log"
 
-	"github.com/feature-flag-platform/cmd/analytics-engine/internal/middleware"
-	"github.com/feature-flag-platform/cmd/analytics-engine/internal/services"
+	"github.com/Sidd-007/feature-flag-platform/cmd/analytics-engine/internal/middleware"
+	"github.com/Sidd-007/feature-flag-platform/cmd/analytics-engine/internal/services"
 )
 
 func (h *Handlers) RunTTest(w http.ResponseWriter, r *http.Request) {

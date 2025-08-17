@@ -7,10 +7,10 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 
-	"github.com/feature-flag-platform/cmd/control-plane/internal/repository"
-	"github.com/feature-flag-platform/pkg/auth"
-	"github.com/feature-flag-platform/pkg/config"
-	"github.com/feature-flag-platform/pkg/rbac"
+	"github.com/Sidd-007/feature-flag-platform/cmd/control-plane/internal/repository"
+	"github.com/Sidd-007/feature-flag-platform/pkg/auth"
+	"github.com/Sidd-007/feature-flag-platform/pkg/config"
+	"github.com/Sidd-007/feature-flag-platform/pkg/rbac"
 )
 
 // AuthService handles authentication operations

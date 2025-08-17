@@ -260,7 +260,7 @@ make ps           # Show running containers
 ### Go SDK
 
 ```go
-import "github.com/feature-flag-platform/sdk/go"
+import "github.com/Sidd-007/feature-flag-platform/sdk/go"
 
 client := ff.NewClient(ff.Config{
     EnvKey:   "your-env-key",
@@ -333,16 +333,6 @@ make up    # Docker Compose
 4. Add tests
 5. Run `make ci` to verify
 6. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🆘 Support
-
-- **Documentation**: [docs/](./docs/)
-- **Issues**: GitHub Issues
-- **Discord**: [Feature Flag Platform Discord](#)
 
 ## 🔧 Troubleshooting
 

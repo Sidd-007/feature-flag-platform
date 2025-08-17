@@ -10,8 +10,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/feature-flag-platform/cmd/control-plane/internal/server"
-	"github.com/feature-flag-platform/pkg/config"
+	"github.com/Sidd-007/feature-flag-platform/cmd/control-plane/internal/server"
+	"github.com/Sidd-007/feature-flag-platform/pkg/config"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"

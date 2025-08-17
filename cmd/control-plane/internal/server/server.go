@@ -13,13 +13,13 @@ import (
 	"github.com/redis/go-redis/v9"
 	"github.com/rs/zerolog"
 
-	"github.com/feature-flag-platform/cmd/control-plane/internal/handlers"
-	"github.com/feature-flag-platform/cmd/control-plane/internal/middleware"
-	"github.com/feature-flag-platform/cmd/control-plane/internal/repository"
-	"github.com/feature-flag-platform/cmd/control-plane/internal/services"
-	"github.com/feature-flag-platform/pkg/auth"
-	"github.com/feature-flag-platform/pkg/config"
-	"github.com/feature-flag-platform/pkg/rbac"
+	"github.com/Sidd-007/feature-flag-platform/cmd/control-plane/internal/handlers"
+	"github.com/Sidd-007/feature-flag-platform/cmd/control-plane/internal/middleware"
+	"github.com/Sidd-007/feature-flag-platform/cmd/control-plane/internal/repository"
+	"github.com/Sidd-007/feature-flag-platform/cmd/control-plane/internal/services"
+	"github.com/Sidd-007/feature-flag-platform/pkg/auth"
+	"github.com/Sidd-007/feature-flag-platform/pkg/config"
+	"github.com/Sidd-007/feature-flag-platform/pkg/rbac"
 )
 
 // Server represents the control plane server
@@ -388,7 +388,7 @@ func (s *Server) handleAPIInfo(w http.ResponseWriter, r *http.Request) {
 			"authentication": "/v1/auth",
 			"organizations":  "/v1/orgs",
 			"health":         "/v1/health",
-			"docs":           "https://github.com/feature-flag-platform/docs",
+			"docs":           "https://github.com/Sidd-007/feature-flag-platform/docs",
 		},
 		"status": "ready",
 	}

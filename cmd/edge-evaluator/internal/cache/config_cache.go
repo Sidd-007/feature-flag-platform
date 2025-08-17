@@ -10,7 +10,7 @@ import (
 	"github.com/redis/go-redis/v9"
 	"github.com/rs/zerolog"
 
-	"github.com/feature-flag-platform/pkg/bucketing"
+	"github.com/Sidd-007/feature-flag-platform/pkg/bucketing"
 )
 
 // EnvironmentConfig represents the configuration for an environment

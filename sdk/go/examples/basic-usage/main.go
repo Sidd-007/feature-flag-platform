@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	featureflags "github.com/feature-flag-platform/sdk/go"
+	featureflags "github.com/Sidd-007/feature-flag-platform/sdk/go"
 )
 
 func main() {

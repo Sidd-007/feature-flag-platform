@@ -11,7 +11,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
 
-	"github.com/feature-flag-platform/pkg/auth"
+	"github.com/Sidd-007/feature-flag-platform/pkg/auth"
 )
 
 // AuthMiddleware handles authentication for edge evaluator

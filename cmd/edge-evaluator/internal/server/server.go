@@ -11,13 +11,13 @@ import (
 	"github.com/redis/go-redis/v9"
 	"github.com/rs/zerolog"
 
-	"github.com/feature-flag-platform/cmd/edge-evaluator/internal/cache"
-	"github.com/feature-flag-platform/cmd/edge-evaluator/internal/handlers"
-	"github.com/feature-flag-platform/cmd/edge-evaluator/internal/middleware"
-	"github.com/feature-flag-platform/cmd/edge-evaluator/internal/services"
-	"github.com/feature-flag-platform/pkg/auth"
-	"github.com/feature-flag-platform/pkg/bucketing"
-	"github.com/feature-flag-platform/pkg/config"
+	"github.com/Sidd-007/feature-flag-platform/cmd/edge-evaluator/internal/cache"
+	"github.com/Sidd-007/feature-flag-platform/cmd/edge-evaluator/internal/handlers"
+	"github.com/Sidd-007/feature-flag-platform/cmd/edge-evaluator/internal/middleware"
+	"github.com/Sidd-007/feature-flag-platform/cmd/edge-evaluator/internal/services"
+	"github.com/Sidd-007/feature-flag-platform/pkg/auth"
+	"github.com/Sidd-007/feature-flag-platform/pkg/bucketing"
+	"github.com/Sidd-007/feature-flag-platform/pkg/config"
 )
 
 // Server represents the edge evaluator server

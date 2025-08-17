@@ -9,8 +9,8 @@ import (
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
 
-	"github.com/feature-flag-platform/cmd/event-ingestor/internal/storage"
-	"github.com/feature-flag-platform/pkg/config"
+	"github.com/Sidd-007/feature-flag-platform/cmd/event-ingestor/internal/storage"
+	"github.com/Sidd-007/feature-flag-platform/pkg/config"
 )
 
 // IngestionService handles high-throughput event ingestion

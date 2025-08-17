@@ -7,8 +7,8 @@ import (
 
 	"github.com/rs/zerolog"
 
-	"github.com/feature-flag-platform/cmd/edge-evaluator/internal/cache"
-	"github.com/feature-flag-platform/pkg/bucketing"
+	"github.com/Sidd-007/feature-flag-platform/cmd/edge-evaluator/internal/cache"
+	"github.com/Sidd-007/feature-flag-platform/pkg/bucketing"
 )
 
 // EvaluationService handles flag evaluation

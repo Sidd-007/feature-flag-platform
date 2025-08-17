@@ -15,8 +15,8 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
-	"github.com/feature-flag-platform/cmd/analytics-engine/internal/server"
-	"github.com/feature-flag-platform/pkg/config"
+	"github.com/Sidd-007/feature-flag-platform/cmd/analytics-engine/internal/server"
+	"github.com/Sidd-007/feature-flag-platform/pkg/config"
 )
 
 func main() {

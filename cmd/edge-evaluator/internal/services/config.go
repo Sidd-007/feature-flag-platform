@@ -10,8 +10,8 @@ import (
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
 
-	"github.com/feature-flag-platform/cmd/edge-evaluator/internal/cache"
-	"github.com/feature-flag-platform/pkg/config"
+	"github.com/Sidd-007/feature-flag-platform/cmd/edge-evaluator/internal/cache"
+	"github.com/Sidd-007/feature-flag-platform/pkg/config"
 )
 
 // ConfigService manages configuration updates from the control plane

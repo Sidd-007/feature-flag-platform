@@ -8,7 +8,7 @@ import (
 
 	"github.com/rs/zerolog/log"
 
-	"github.com/feature-flag-platform/cmd/analytics-engine/internal/repository"
+	"github.com/Sidd-007/feature-flag-platform/cmd/analytics-engine/internal/repository"
 )
 
 type ExperimentService interface {

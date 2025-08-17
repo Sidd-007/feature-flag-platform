@@ -9,7 +9,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 
-	"github.com/feature-flag-platform/cmd/control-plane/internal/services"
+	"github.com/Sidd-007/feature-flag-platform/cmd/control-plane/internal/services"
 )
 
 // ConfigHandler handles configuration endpoints for edge evaluators

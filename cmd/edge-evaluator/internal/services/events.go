@@ -10,8 +10,8 @@ import (
 
 	"github.com/rs/zerolog"
 
-	"github.com/feature-flag-platform/pkg/bucketing"
-	"github.com/feature-flag-platform/pkg/config"
+	"github.com/Sidd-007/feature-flag-platform/pkg/bucketing"
+	"github.com/Sidd-007/feature-flag-platform/pkg/config"
 )
 
 // EventService handles sending events to the event ingestor

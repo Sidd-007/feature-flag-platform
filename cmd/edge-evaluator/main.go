@@ -15,8 +15,8 @@ import (
 	"github.com/go-chi/cors"
 	"github.com/rs/zerolog"
 
-	"github.com/feature-flag-platform/cmd/edge-evaluator/internal/server"
-	"github.com/feature-flag-platform/pkg/config"
+	"github.com/Sidd-007/feature-flag-platform/cmd/edge-evaluator/internal/server"
+	"github.com/Sidd-007/feature-flag-platform/pkg/config"
 )
 
 func main() {

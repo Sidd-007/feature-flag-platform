@@ -14,7 +14,7 @@ Get your feature flag platform up and running in under 10 minutes.
 
 ```bash
 # Clone the repository
-git clone https://github.com/feature-flag-platform/platform
+git clone https://github.com/Sidd-007/feature-flag-platform
 cd platform
 
 # Start PostgreSQL, Redis, NATS, and ClickHouse
@@ -137,7 +137,7 @@ import (
 	"log"
 	"time"
 
-	featureflags "github.com/feature-flag-platform/sdk/go"
+	featureflags "github.com/Sidd-007/feature-flag-platform/sdk/go"
 )
 
 func main() {

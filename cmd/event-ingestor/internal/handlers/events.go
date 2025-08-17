@@ -8,8 +8,8 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/rs/zerolog"
 
-	"github.com/feature-flag-platform/cmd/event-ingestor/internal/services"
-	"github.com/feature-flag-platform/cmd/event-ingestor/internal/storage"
+	"github.com/Sidd-007/feature-flag-platform/cmd/event-ingestor/internal/services"
+	"github.com/Sidd-007/feature-flag-platform/cmd/event-ingestor/internal/storage"
 )
 
 // EventsHandler handles event ingestion endpoints

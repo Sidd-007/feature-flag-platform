@@ -1,4 +1,4 @@
-module github.com/feature-flag-platform/sdk/go
+module github.com/Sidd-007/feature-flag-platform/sdk/go
 
 go 1.22
 

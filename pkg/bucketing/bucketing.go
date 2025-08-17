@@ -3,7 +3,7 @@ package bucketing
 import (
 	"fmt"
 
-	"github.com/feature-flag-platform/pkg/hashing"
+	"github.com/Sidd-007/feature-flag-platform/pkg/hashing"
 )
 
 // Bucketer handles user bucketing for feature flags and experiments

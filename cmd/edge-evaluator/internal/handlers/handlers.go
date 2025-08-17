@@ -3,7 +3,7 @@ package handlers
 import (
 	"github.com/rs/zerolog"
 
-	"github.com/feature-flag-platform/cmd/edge-evaluator/internal/services"
+	"github.com/Sidd-007/feature-flag-platform/cmd/edge-evaluator/internal/services"
 )
 
 // Handlers holds all HTTP handlers for the edge evaluator

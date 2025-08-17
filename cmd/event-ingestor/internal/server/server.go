@@ -10,12 +10,12 @@ import (
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
 
-	"github.com/feature-flag-platform/cmd/event-ingestor/internal/handlers"
-	"github.com/feature-flag-platform/cmd/event-ingestor/internal/middleware"
-	"github.com/feature-flag-platform/cmd/event-ingestor/internal/services"
-	"github.com/feature-flag-platform/cmd/event-ingestor/internal/storage"
-	"github.com/feature-flag-platform/pkg/auth"
-	"github.com/feature-flag-platform/pkg/config"
+	"github.com/Sidd-007/feature-flag-platform/cmd/event-ingestor/internal/handlers"
+	"github.com/Sidd-007/feature-flag-platform/cmd/event-ingestor/internal/middleware"
+	"github.com/Sidd-007/feature-flag-platform/cmd/event-ingestor/internal/services"
+	"github.com/Sidd-007/feature-flag-platform/cmd/event-ingestor/internal/storage"
+	"github.com/Sidd-007/feature-flag-platform/pkg/auth"
+	"github.com/Sidd-007/feature-flag-platform/pkg/config"
 )
 
 // Server represents the event ingestor server

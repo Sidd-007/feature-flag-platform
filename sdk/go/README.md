@@ -16,7 +16,7 @@ A powerful, production-ready Go SDK for the Feature Flag & Experimentation Platf
 ## Installation
 
 ```bash
-go get github.com/feature-flag-platform/sdk/go
+go get github.com/Sidd-007/feature-flag-platform/sdk/go
 ```
 
 ## Quick Start
@@ -47,7 +47,7 @@ import (
     "log"
     "time"
 
-    featureflags "github.com/feature-flag-platform/sdk/go"
+    featureflags "github.com/Sidd-007/feature-flag-platform/sdk/go"
 )
 
 func main() {
@@ -637,7 +637,7 @@ This SDK is part of the Feature Flag & Experimentation Platform.
 
 ## Support
 
-- 📖 [Documentation](https://github.com/feature-flag-platform/docs)
-- 🐛 [Issue Tracker](https://github.com/feature-flag-platform/issues)
+- 📖 [Documentation](https://github.com/Sidd-007/feature-flag-platform/docs)
+- 🐛 [Issue Tracker](https://github.com/Sidd-007/feature-flag-platform/issues)
 - 💬 [Discord Community](https://discord.gg/feature-flags)
 - 📧 [Email Support](mailto:support@featureflags.com)

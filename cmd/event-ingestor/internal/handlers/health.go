@@ -7,7 +7,7 @@ import (
 
 	"github.com/rs/zerolog"
 
-	"github.com/feature-flag-platform/cmd/event-ingestor/internal/services"
+	"github.com/Sidd-007/feature-flag-platform/cmd/event-ingestor/internal/services"
 )
 
 // HealthHandler handles health check endpoints

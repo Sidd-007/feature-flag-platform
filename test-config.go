@@ -1,10 +1,10 @@
-﻿package main
+package main
 
 import (
 	"fmt"
 	"log"
 	"os"
-	"github.com/feature-flag-platform/pkg/config"
+	"github.com/Sidd-007/feature-flag-platform/pkg/config"
 )
 
 func main() {
